@@ -4,17 +4,55 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import com.example.foodapp.data_classes.Category
 import com.example.foodapp.data_classes.Food
 import com.example.foodapp.data_classes.Restaurant
 import com.example.foodapp.ui.theme.FoodAppTheme
+import com.example.foodapp.ui.theme.green
+import com.example.foodapp.ui.theme.orange
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +61,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FoodAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
+                    MainPage(innerPadding)
                 }
             }
         }
@@ -31,9 +69,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainPage(){
+fun MainPage(padding : PaddingValues){
     val categories = listOf<Category>(
-        Category(name = "Fast food", imageUrl = "https://static.vecteezy.com/system/resources/previews/000/964/198/non_2x/fast-food-meal-set-vector.jpg"),
+        Category(name = "Fast food", imageUrl = "https://images.vexels.com/media/users/3/143047/isolated/preview/b0c9678466af11dd45a62163bdcf03fe-fast-food-hamburger-flat-icon.png"),
         Category(name = "Chinese", imageUrl = "https://cdn-icons-png.freepik.com/512/1046/1046791.png"),
         Category(name = "Italian", imageUrl = "https://cdn-icons-png.freepik.com/512/6045/6045709.png"),
         Category(name = "Mexican", imageUrl = "https://cdn-icons-png.flaticon.com/512/6045/6045803.png"),
@@ -41,12 +79,12 @@ fun MainPage(){
         Category(name = "Desserts", imageUrl = "https://cdn-icons-png.flaticon.com/512/5347/5347946.png"),
     )
     val restaurants = listOf<Restaurant>(
-        Restaurant(name = "KFC", logoUrl = "https://upload.wikimedia.org/wikipedia/sco/thumb/b/bf/KFC_logo.svg/1200px-KFC_logo.svg.png", category = categories[0]),
+        Restaurant(name = "KFC", logoUrl = "https://1000marcas.net/wp-content/uploads/2020/01/KFC-logo.png", category = categories[0]),
         Restaurant(name = "Panda express", logoUrl = "https://logos-world.net/wp-content/uploads/2022/02/Panda-Express-Logo-1983.png", category = categories[1]),
-        Restaurant(name = "Domino´s", logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Domino%27s_pizza_logo.svg/2036px-Domino%27s_pizza_logo.svg.png", category = categories[2]),
+        Restaurant(name = "Domino´s", logoUrl = "https://logos-world.net/wp-content/uploads/2021/08/Dominos-Logo.png", category = categories[2]),
         Restaurant(name = "Tacos El Pata", logoUrl = "https://www.tacoselpataedomex.com/templates/yootheme/cache/logo_tacoselpata-1fb08e78.png", category = categories[3]),
-        Restaurant(name = "VIPS", logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/VIPS_Logo_Mexico_01.2024.svg/1200px-VIPS_Logo_Mexico_01.2024.svg.png", category = categories[4]),
-        Restaurant(name = "Krispy Kreme", logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Krispy_Kreme_logo.svg/1024px-Krispy_Kreme_logo.svg.png", category = categories[5]),
+        Restaurant(name = "VIPS", logoUrl = "https://www.coacalcopowercenter.com.mx/wp-content/uploads/2021/10/VIPS-PNG-500x500.png", category = categories[4]),
+        Restaurant(name = "Dunkin Donuts", logoUrl = "https://logos-world.net/wp-content/uploads/2020/12/Dunkin-Emblem.png", category = categories[5]),
     )
 
     val foods = listOf<Food>(
@@ -58,14 +96,173 @@ fun MainPage(){
         Food(name="Glazed Dozen", rating= 5.0f, price= 220.0f, imageUrl = "https://www.pikpng.com/pngl/b/452-4523214_donut-png-tumblr.png", restaurant= restaurants[5]),
     )
 
+    Column(
+        modifier = Modifier.fillMaxSize().padding(padding)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Header con imagen de perfil, saludo y boton
+            IconButton(
+                onClick = {
+                    println("Perfil")
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    tint = Color.White,
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(orange)
+
+                )
+            }
+            Text(text="Hola Mariana!", fontWeight = FontWeight.Bold, fontSize = 25.sp, modifier = Modifier.padding(end= 120.dp, top= 10.dp))
+            IconButton(
+                onClick = {
+                    println("Salida")
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    tint = orange,
+                    contentDescription = "Exit",
+                    modifier = Modifier
+                        .size(40.dp)
+
+                )
+            }
+        }
+        Text(text = "Nuestras categorias", fontSize = 25.sp)
+        LazyRow(
+            modifier = Modifier.weight(2f)
+        ) {
+            items(categories){ category ->
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                    , horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Box(
+                        modifier = Modifier
+                            .size(90.dp)
+                            .clip(CircleShape)
+                            .background(orange)
+                    ){
+                        AsyncImage(
+                            model = category.imageUrl,
+                            contentDescription = category.name,
+                            modifier = Modifier.fillMaxSize().size(70.dp).padding(10.dp),
+                            placeholder = painterResource(R.drawable.ic_launcher_background),
+                            contentScale = ContentScale.Inside
+                        )
+                    }
+                    Text(text= category.name)
+                }
+            }
+
+        }
+        Text(text = "Busca los mejores restaurantes", fontSize = 25.sp)
+        LazyRow(
+            modifier = Modifier.weight(2f)
+        ) {
+            items(restaurants){restaurant ->
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                    , horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Box(
+                        modifier = Modifier
+                            .size(90.dp)
+                    ){
+                        AsyncImage(
+                            model = restaurant.logoUrl,
+                            contentDescription = restaurant.name,
+                            modifier = Modifier.fillMaxSize(),
+                            placeholder = painterResource(R.drawable.ic_launcher_background),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    Text(text= restaurant.name)
+                }
+            }
+
+        }
+        Text(text = "Nuestras mejores comidas", fontSize =  25.sp)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+
+            modifier = Modifier.weight(5f).fillMaxSize()
+        ) {
+            items(foods) { product ->
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                            .size(170.dp)
+                    ) {
+                        AsyncImage(
+                            model = product.imageUrl,
+                            contentDescription = product.name,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(10.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Inside
+                        )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(10.dp)
+                                .size(width = 80.dp, height = 40.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(orange),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "$ ${product.price}",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Rating Star",
+                            tint = green
+                        )
+                        Text(
+                            text = "${product.rating} ${product.name}",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+
 
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true,
+    showSystemUi = true)
 @Composable
 fun MainPreview() {
-    FoodAppTheme {
-
-    }
+    MainPage(PaddingValues(10.dp))
 }
