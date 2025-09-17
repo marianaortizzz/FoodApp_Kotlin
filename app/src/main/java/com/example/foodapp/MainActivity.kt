@@ -45,6 +45,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.foodapp.components.Categorias
+import com.example.foodapp.components.Comidas
+import com.example.foodapp.components.MenuSuperior
+import com.example.foodapp.components.Restaurantes
 import com.example.foodapp.data_classes.Category
 import com.example.foodapp.data_classes.Food
 import com.example.foodapp.data_classes.Restaurant
@@ -99,164 +103,35 @@ fun MainPage(padding : PaddingValues){
     Column(
         modifier = Modifier.fillMaxSize().padding(padding)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().weight(1f),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Header con imagen de perfil, saludo y boton
-            IconButton(
-                onClick = {
-                    println("Perfil")
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    tint = Color.White,
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(orange)
-
-                )
-            }
-            Text(text="Hola Mariana!", fontWeight = FontWeight.Bold, fontSize = 25.sp, modifier = Modifier.padding(end= 120.dp, top= 10.dp))
-            IconButton(
-                onClick = {
-                    println("Salida")
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    tint = orange,
-                    contentDescription = "Exit",
-                    modifier = Modifier
-                        .size(40.dp)
-
-                )
-            }
-        }
+        MenuSuperior()
         Text(text = "Nuestras categorias", fontSize = 25.sp)
         LazyRow(
             modifier = Modifier.weight(2f)
         ) {
             items(categories){ category ->
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                    , horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Box(
-                        modifier = Modifier
-                            .size(90.dp)
-                            .clip(CircleShape)
-                            .background(orange)
-                    ){
-                        AsyncImage(
-                            model = category.imageUrl,
-                            contentDescription = category.name,
-                            modifier = Modifier.fillMaxSize().size(70.dp).padding(10.dp),
-                            placeholder = painterResource(R.drawable.ic_launcher_background),
-                            contentScale = ContentScale.Inside
-                        )
-                    }
-                    Text(text= category.name)
-                }
+                Categorias(category)
             }
-
         }
         Text(text = "Busca los mejores restaurantes", fontSize = 25.sp)
         LazyRow(
             modifier = Modifier.weight(2f)
         ) {
             items(restaurants){restaurant ->
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp)
-                    , horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Box(
-                        modifier = Modifier
-                            .size(90.dp)
-                    ){
-                        AsyncImage(
-                            model = restaurant.logoUrl,
-                            contentDescription = restaurant.name,
-                            modifier = Modifier.fillMaxSize(),
-                            placeholder = painterResource(R.drawable.ic_launcher_background),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                    Text(text= restaurant.name)
-                }
+                Restaurantes(restaurant)
             }
 
         }
         Text(text = "Nuestras mejores comidas", fontSize =  25.sp)
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-
             modifier = Modifier.weight(5f).fillMaxSize()
         ) {
             items(foods) { product ->
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                            .size(170.dp)
-                    ) {
-                        AsyncImage(
-                            model = product.imageUrl,
-                            contentDescription = product.name,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(10.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                            contentScale = ContentScale.Inside
-                        )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(10.dp)
-                                .size(width = 80.dp, height = 40.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(orange),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "$ ${product.price}",
-                                color = Color.White,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = "Rating Star",
-                            tint = green
-                        )
-                        Text(
-                            text = "${product.rating} ${product.name}",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
-                        )
-                    }
-                }
+                Comidas(product)
             }
         }
 
     }
-
-
 }
 
 
