@@ -101,7 +101,7 @@ fun MainPage(padding : PaddingValues){
     )
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding)
+        modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 10.dp)
     ) {
         MenuSuperior()
         Text(text = "Nuestras categorias", fontSize = 25.sp)
